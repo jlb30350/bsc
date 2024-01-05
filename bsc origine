@@ -1,0 +1,285 @@
+# Définir les données ok
+data = <<-DATA
+1561115	890003598035
+1561115	890003598035
+1561115	890003598035
+1898224	890003598036
+1898224	890003598036
+1898224	890003598036
+10832	890003598037
+10832	890003598037
+1561115	890003598181
+1561115	890003598181
+# ... (plusieurs lignes de données)
+1561115	890003599918
+1561115	890003599918
+DATA
+
+    Un bloc de données est défini sous la forme d'une chaîne de caractères entre <<-DATA et DATA. Ces données semblent être organisées en deux colonnes, séparées par une tabulation.
+
+ruby
+
+# Utiliser un tableau pour stocker les valeurs uniques
+unique_numbers = []
+
+    Un tableau vide unique_numbers est créé pour stocker les numéros uniques extraits des données.
+
+ruby
+
+# Parcourir les lignes et ajouter les numéros uniques au tableau
+data.lines.each do |line|
+  _, number = line.split("\t").map(&:to_i)
+  unique_numbers << number unless unique_numbers.include?(number)
+end
+
+    Une boucle each est utilisée pour parcourir chaque ligne des données. Chaque ligne est divisée en deux parties à l'aide de split("\t"), qui divise la ligne à chaque tabulation. La deuxième partie de chaque ligne, qui est le numéro, est extraite et convertie en entier avec map(&:to_i). Si ce numéro n'est pas déjà présent dans le tableau unique_numbers, il est ajouté à ce tableau.
+
+ruby
+
+# Afficher le nombre total de numéros différents
+puts "Nombre total de numéros différents : #{unique_numbers.size}"
+
+    Enfin, le programme affiche le nombre total de numéros différents en utilisant la méthode size du tableau unique_numbers. Cela donne le nombre total d'éléments uniques dans le tableau. Le résultat est affiché à l'aide de puts.
+    
+    ----------------------------------
+    #comptage echantillon
+    
+    # Définir les données ok
+data = <<-DATA
+1561115	890003598035
+1561115	890003598035
+1561115	890003598035
+1898224	890003598036
+1898224	890003598036
+1898224	890003598036
+10832	890003598037
+10832	890003598037
+1561115	890003598181
+1561115	890003598181
+1561115	890003598181
+90091	890003598265
+90091	890003598265
+90091	890003598265
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+1561115	890003598434
+1561115	890003598434
+1561115	890003598434
+90091	890003598477
+90091	890003598477
+90091	890003598477
+10832	890003598478
+10832	890003598478
+1898224	890003599095
+1898224	890003599095
+1898224	890003599095
+1561115	890003599127
+1561115	890003599127
+1561115	890003599127
+10832	890003599191
+10832	890003599191
+1561115	890003599283
+1561115	890003599283
+1561115	890003599283
+1898224	890003599358
+1898224	890003599358
+1898224	890003599358
+10832	890003599635
+10832	890003599635
+1898224	890003599645
+1898224	890003599645
+1898224	890003599645
+90091	890003599660
+90091	890003599660
+90091	890003599660
+1561115	890003599918
+1561115	890003599918
+
+DATA
+
+# Utiliser un tableau pour stocker les valeurs uniques
+unique_numbers = []
+
+# Parcourir les lignes et ajouter les numéros uniques au tableau
+data.lines.each do |line|
+  _, number = line.split("\t").map(&:to_i)
+  unique_numbers << number unless unique_numbers.include?(number)
+end
+
+# Afficher le nombre total de numéros différents
+puts "Nombre total de numéros différents : #{unique_numbers.size}"
+
+
+---------------------------------------------------------
+#comptage du nombre de N°Sap differents en fonction du N° de lot
+
+# Définir les données
+data = <<-DATA
+1561115	890003598035
+1561115	890003598035
+1561115	890003598035
+1898224	890003598036
+1898224	890003598036
+1898224	890003598036
+10832	890003598037
+10832	890003598037
+1561115	890003598181
+1561115	890003598181
+1561115	890003598181
+90091	890003598265
+90091	890003598265
+90091	890003598265
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+90122	890003598430
+1561115	890003598434
+1561115	890003598434
+1561115	890003598434
+90091	890003598477
+90091	890003598477
+90091	890003598477
+10832	890003598478
+10832	890003598478
+1898224	890003599095
+1898224	890003599095
+1898224	890003599095
+1561115	890003599127
+1561115	890003599127
+1561115	890003599127
+10832	890003599191
+10832	890003599191
+1561115	890003599283
+1561115	890003599283
+1561115	890003599283
+1898224	890003599358
+1898224	890003599358
+1898224	890003599358
+10832	890003599635
+10832	890003599635
+1898224	890003599645
+1898224	890003599645
+1898224	890003599645
+90091	890003599660
+90091	890003599660
+90091	890003599660
+1561115	890003599918
+1561115	890003599918
+4545	363637
+4545	363637
+1111111	920
+1111111	922
+1111112	9999999999
+123456	100
+123456	100
+123456	100
+123456  100
+123456  100
+123456  200
+000000  111
+000000  111
+DATA
+
+# Initialiser un hash pour stocker tous les lots de contrôle par
+lots_by_article = Hash.new { |hash, key| hash[key] = [] }
+
+# Parcourir les lignes et ajouter tous les lots de contrôle au hash
+data.lines.each do |line|
+  article, lot = line.split(/\t/).map(&:strip).flat_map { |part| part.scan(/\d+/) }.compact
+  lots_by_article[article] << lot
+end
+
+# Afficher le nombre de lots de contrôle différents pour chaque code d'article
+lots_by_article.each do |article, lots|
+  puts "Code article: #{article}, Nombre de lots de contrôle différents: #{lots.uniq.size}"
+end
+
+------------------------------------------
+explication de ce code
+
+# Définir les données
+data = <<-DATA
+#N°de lot(ici code article)   N°SAP
+1561115	890003598035
+# ... (plusieurs lignes de données)
+000000  111
+000000  111
+DATA
+
+    Les données sont définies dans une chaîne multiligne, qui contient des informations sur des articles et leurs lots associés.
+
+ruby
+
+# Initialiser un hash pour stocker tous les lots de contrôle par
+lots_by_article = Hash.new { |hash, key| hash[key] = [] }
+
+   Cette ligne de code initialise un hash en Ruby qui sera utilisé pour stocker tous les lots de contrôle associés à chaque article. Voici une explication plus détaillée :
+
+    Hash.new: Cela crée une nouvelle instance de la classe Hash. Cependant, par défaut, un hash nouvellement créé serait vide, c'est-à-dire qu'il ne contiendrait aucune paire clé-valeur.
+
+    { |hash, key| hash[key] = [] }: C'est la partie intéressante. Lors de la création du hash, on utilise un bloc (block) pour définir une valeur par défaut. Ce bloc prend deux arguments, hash et key.
+        hash: C'est la référence au hash lui-même.
+        key: C'est la clé pour laquelle on veut définir une valeur par défaut.
+
+    hash[key] = []: Cette ligne de code à l'intérieur du bloc affecte une valeur au hash. Elle attribue une clé key avec une valeur initiale, qui est un tableau vide ([]). Ainsi, si une clé n'existe pas dans le hash lorsqu'on y accède, cette clé sera créée et associée à un tableau vide.
+
+En résumé, avec cette initialisation, chaque clé dans lots_by_article est associée à un tableau. Si la clé (représentant un article) n'existe pas encore dans le hash, elle est créée avec une valeur initiale de tableau vide. Cela permet de stocker plusieurs lots de contrôle associés à chaque article dans un tableau.
+
+ruby
+
+# Parcourir les lignes et ajouter tous les lots de contrôle au hash
+data.lines.each do |line|
+
+    Une boucle each commence pour parcourir chaque ligne des données.
+
+ruby
+   data.lines.each do |line|	
+  article, lot = line.split(/\t/).map(&:strip).flat_map { |part| part.scan(/\d+/) }.compact
+  
+
+      data.lines.each do |line|: Cette partie de la boucle itère sur chaque ligne de la chaîne data.
+
+    line.split(/\t/): La méthode split divise la ligne en utilisant la tabulation (\t) comme délimiteur. Cela crée un tableau contenant les parties séparées par des tabulations.
+
+    .map(&:strip): La méthode map est utilisée pour appliquer strip à chaque partie résultante du split. Cela supprime les espaces au début et à la fin de chaque partie.
+
+    .flat_map { |part| part.scan(/\d+/) }: flat_map est utilisé pour appliquer scan(/\d+/) à chaque partie nettoyée. scan(/\d+/) extrait tous les chiffres de chaque partie. En utilisant flat_map, les résultats de chaque partie sont combinés en un seul tableau plat.
+
+    .compact: Enfin, compact est utilisé pour supprimer les éléments nuls du tableau résultant. Cela est nécessaire car certaines parties peuvent ne pas contenir de chiffres.
+
+    article, lot = ...: Les chiffres extraits sont assignés aux variables article et lot. La variable article contient les informations sur l'article, et la variable lot contient les informations sur le lot.
+
+    lots_by_article[article] << lot: Ces informations sont ensuite utilisées pour accéder au hash lots_by_article. Si la clé article n'existe pas encore dans le hash, elle est créée avec une valeur initiale de tableau vide. Ensuite, le lot est ajouté à ce tableau associé à la clé article.
+
+En résumé, cette boucle parcourt chaque ligne des données, divise chaque ligne en parties en utilisant une tabulation comme délimiteur, nettoie ces parties, extrait les chiffres de chaque partie, puis utilise ces chiffres pour associer chaque article à un lot dans le hash lots_by_article. Cela permet de construire une structure de données organisée qui associe chaque article à une liste de lots de contrôle.
+ruby
+
+  lots_by_article[article] << lot
+end
+
+    Les lots associés à chaque article sont ajoutés au hash lots_by_article. Chaque article a une liste de lots associés.
+
+ruby
+
+# Afficher le nombre de lots de contrôle différents pour chaque code d'article
+lots_by_article.each do |article, lots|
+  puts "Code article: #{article}, Nombre de lots de contrôle différents: #{lots.uniq.size}"
+end
+
+    Une fois que toutes les données ont été traitées, une autre boucle each parcourt le hash lots_by_article pour afficher le nombre de lots de contrôle différents pour chaque code d'article. La méthode uniq.size est utilisée pour obtenir le nombre d'éléments uniques dans la liste des lots associés à chaque article.
+
+
+
+
